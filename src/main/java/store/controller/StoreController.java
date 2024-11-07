@@ -1,5 +1,6 @@
 package store.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import store.model.Store;
 import store.service.StoreService;
@@ -19,12 +20,14 @@ public class StoreController {
 
     public void run() {
         List<Store> products = printProductList();
-        purchaseProduct(products);
+//        purchaseProduct(products);
     }
 
     private List<Store> printProductList() {
-        List<Store> products = storeService.loadProductsFrom();
-        outputView.printProductList(products);
-        return products;
+        List<Store> store = new ArrayList<>();
+
+        storeService.loadProductsFrom(store);
+        outputView.printProductList(store);
+        return store;
     }
 }
