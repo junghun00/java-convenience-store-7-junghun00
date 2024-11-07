@@ -1,10 +1,5 @@
 package store.model;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,37 +16,18 @@ public class Store {
         this.promotion = promotion;
     }
 
-    public static List<Store> loadProductsFrom(String fileName) {
-        List<Store> products = new ArrayList<>();
-
-        try (InputStream in = Store.class.getResourceAsStream("/" + fileName);
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
-
-            br.readLine();
-
-            String line;
-            while ((line = br.readLine()) != null) {
-                checkNotPromotionProduct(products, line);
-                products.add(parseLine(line));
-            }
-        } catch (IOException e) {
-            System.out.println("");
-        }
-        return products;
-    }
-
-    private static void checkNotPromotionProduct(List<Store> products, String line) {
-        if (products.isEmpty()) {
-            return ;
+    public static void checkNotPromotionProduct(List<Store> store, String line) {
+        if (store.isEmpty()) {
+            return;
         }
 
-        Store product = products.getLast();
-        if (!line.contains(product.getName()) && product.getPromotion() != "") {
-            products.add(new Store(product.getName(), product.getPrice(), 0, ""));
+        Store product = store.getLast();
+        if (!line.contains(product.getName()) && !product.getPromotion().isEmpty()) {
+            store.add(new Store(product.getName(), product.getPrice(), 0, ""));
         }
     }
 
-    private static Store parseLine(String line) {
+    public static Store parseLine(String line) {
         List<String> product = Arrays.asList(line.split(","));
 
         String name = product.get(0).trim();
@@ -88,7 +64,8 @@ public class Store {
             return "- " +
                     name + " " +
                     formatPrice + "원 " +
-                    "재고 없음";
+                    "재고 없음" +
+                    promotion;
         }
         return "- " +
                 name + " " +

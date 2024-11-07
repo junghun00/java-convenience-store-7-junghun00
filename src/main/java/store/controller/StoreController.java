@@ -18,7 +18,13 @@ public class StoreController {
     }
 
     public void run() {
-        List<Store> products = storeService.loadProducts();
+        List<Store> products = printProductList();
+        purchaseProduct(products);
+    }
+
+    private List<Store> printProductList() {
+        List<Store> products = storeService.loadProductsFrom();
         outputView.printProductList(products);
+        return products;
     }
 }
