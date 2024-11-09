@@ -3,24 +3,24 @@ package store.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Products {
-    private List<Product> products;
+public class Order {
+    private List<Product> order;
 
-    public Products(String inputOrder) {
+    public Order(String inputOrder) {
         validateProductFormat(inputOrder);
-        this.products = generateProducts(inputOrder);
+        this.order = generateProducts(inputOrder);
     }
 
-    public List<Product> generateProducts(String input) {
+    public List<Product> generateProducts(String inputOrder) {
         List<Product> products = new ArrayList<>();
-        String[] items = input.split("],\\[");
+        String[] orders = inputOrder.split("],\\[");
 
-        for (String item : items) {
-            String nameStart = item.replace("[", "").replace("]", "");
-            int quantityIndex = nameStart.lastIndexOf('-') + 1;
+        for (String order : orders) {
+            String formatOrder = order.replace("[", "").replace("]", "");
+            int quantityIndex = formatOrder.lastIndexOf('-') + 1;
 
-            String name = nameStart.substring(0, quantityIndex- 1).trim();
-            String quantity = nameStart.substring(quantityIndex).trim();
+            String name = formatOrder.substring(0, quantityIndex - 1).trim();
+            String quantity = formatOrder.substring(quantityIndex).trim();
 
             products.add(new Product(name, quantity));
         }
