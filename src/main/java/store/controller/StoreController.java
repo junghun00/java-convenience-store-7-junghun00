@@ -1,13 +1,10 @@
 package store.controller;
 
 import java.util.ArrayList;
-import java.util.IllformedLocaleException;
 import java.util.List;
 import store.model.Order;
-import store.model.Product;
 import store.model.Store;
 import store.service.StoreService;
-import store.utils.ErrorMessage;
 import store.view.InputView;
 import store.view.OutputView;
 
@@ -24,7 +21,9 @@ public class StoreController {
 
     public void run() {
         List<Store> store = printProductList();
-        purchaseProduct(store);
+
+        Order order = purchaseProduct(store);
+        storeService.promotion(store, order);
     }
 
     private List<Store> printProductList() {
@@ -35,16 +34,16 @@ public class StoreController {
         return store;
     }
 
-    private void purchaseProduct(List<Store> store) {
+    private Order purchaseProduct(List<Store> store) {
         while (true) {
             try {
                 String inputOrder = inputView.inputPurchaseProduct();
                 Order order = new Order(inputOrder);
-                break;
+                storeService.checkProduct(store, order);
+                return order;
             } catch (IllegalArgumentException e) {
-               outputView.printError("올바르지 않은 형식으로 입력했습니다.");
+                outputView.printError(e.getMessage());
             }
         }
     }
-
 }
