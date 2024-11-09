@@ -16,17 +16,6 @@ public class Store {
         this.promotion = promotion;
     }
 
-    public static void checkNotPromotionProduct(List<Store> store, String line) {
-        if (store.isEmpty()) {
-            return;
-        }
-
-        Store product = store.getLast();
-        if (!line.contains(product.getName()) && !product.getPromotion().isEmpty()) {
-            store.add(new Store(product.getName(), product.getPrice(), 0, ""));
-        }
-    }
-
     public static Store parseLine(String line) {
         List<String> product = Arrays.asList(line.split(","));
 
@@ -43,6 +32,17 @@ public class Store {
             return "";
         }
         return promotion.trim();
+    }
+
+    public static void checkNotPromotionProduct(List<Store> store, String line) {
+        if (store.isEmpty()) {
+            return;
+        }
+
+        Store product = store.getLast();
+        if (!line.contains(product.getName()) && !product.getPromotion().isEmpty()) {
+            store.add(new Store(product.getName(), product.getPrice(), 0, ""));
+        }
     }
 
     public String getName() {
