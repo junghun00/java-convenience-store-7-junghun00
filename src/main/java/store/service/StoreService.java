@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.IllformedLocaleException;
 import java.util.List;
 import store.model.Order;
@@ -34,10 +35,6 @@ public class StoreService {
         store.add(parseLine(line));
     }
 
-    public void promotion(List<Store> store, Order order) {
-        isPromotion(store, order);
-    }
-
     public void checkProduct(List<Store> store, Order order) {
         for (Product product : order.getOrder()) {
             checkName(store, product);
@@ -47,7 +44,7 @@ public class StoreService {
 
     private void checkName(List<Store> store, Product product) {
         for (Store storeProduct : store) {
-            if (storeProduct.getName() == product.getName()) {
+            if (storeProduct.getName().equals(product.getName())) {
                 return;
             }
         }
@@ -57,8 +54,9 @@ public class StoreService {
 
     private void checkQuantity(List<Store> store, Product product) {
         int quantity = 0;
+
         for (Store storeProduct : store) {
-            if (storeProduct.getName() == product.getName()) {
+            if (storeProduct.getName().equals(product.getName())) {
                 quantity += storeProduct.getQuantity();
             }
         }
@@ -66,5 +64,25 @@ public class StoreService {
         if (quantity < product.getQuantity()) {
             throw new IllformedLocaleException(INVALID_QUANTITY);
         }
+    }
+
+    public List<String> checkPromotion(List<Store> store, Order order) {
+        List<String> promotionType = new ArrayList<>();
+
+        for (Product product : order.getOrder()) {
+            promotionType.add(getPromotion(store, product));
+        }
+
+        return promotionType;
+    }
+
+
+    private String getPromotion(List<Store> store, Product product) {
+        for (Store storeProduct : store) {
+            if (storeProduct.getName().equals(product.getName())) {
+                return storeProduct.getPromotion();
+            }
+        }
+        return "";
     }
 }

@@ -23,7 +23,7 @@ public class StoreController {
         List<Store> store = printProductList();
 
         Order order = purchaseProduct(store);
-        storeService.promotion(store, order);
+        List<String> promotionType = storeService.checkPromotion(store, order);
     }
 
     private List<Store> printProductList() {
