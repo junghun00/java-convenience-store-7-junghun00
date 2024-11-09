@@ -3,6 +3,7 @@ package store.controller;
 import java.util.ArrayList;
 import java.util.List;
 import store.model.Order;
+import store.model.Promotion;
 import store.model.Store;
 import store.service.StoreService;
 import store.view.InputView;
@@ -21,17 +22,23 @@ public class StoreController {
 
     public void run() {
         List<Store> store = printProductList();
-
+        List<Promotion> promotions = loadPromotions();
         Order order = purchaseProduct(store);
-        List<String> promotionType = storeService.checkPromotion(store, order);
+
+        storeService.calculatorPrice(store, order, promotions);
     }
 
     private List<Store> printProductList() {
         List<Store> store = new ArrayList<>();
-
-        storeService.loadProductsFrom(store);
+        storeService.loadProductsForm(store);
         outputView.printProductList(store);
         return store;
+    }
+
+    private List<Promotion> loadPromotions() {
+        List<Promotion> promotions = new ArrayList<>();
+        storeService.loadPromotionsForm(promotions);
+        return promotions;
     }
 
     private Order purchaseProduct(List<Store> store) {
