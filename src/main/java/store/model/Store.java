@@ -16,7 +16,7 @@ public class Store {
         this.promotion = promotion;
     }
 
-    public static Store parseLine(String line) {
+    public static Store parseStore(String line) {
         List<String> product = Arrays.asList(line.split(","));
 
         String name = product.get(0).trim();
@@ -51,6 +51,10 @@ public class Store {
 
     public int getPrice() {
         return price;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public String getPromotion() {

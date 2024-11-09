@@ -1,5 +1,7 @@
 package store.model;
 
+import static store.utils.ErrorMessage.INVALID_FORMAT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class Order {
 
         for (String order : orderList) {
             if (!isValidProductEntry(order.trim())) {
-                throw new IllegalArgumentException("");
+                throw new IllegalArgumentException(INVALID_FORMAT);
             }
         }
     }
@@ -49,5 +51,9 @@ public class Order {
         }
 
         return parts.length == 2;
+    }
+
+    public List<Product> getOrder() {
+        return order;
     }
 }

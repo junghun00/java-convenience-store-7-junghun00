@@ -1,5 +1,8 @@
 package store.model;
 
+
+import static store.utils.ErrorMessage.INVALID_FORMAT;
+
 public class Product {
     private final String name;
     private final int quantity;
@@ -17,14 +20,21 @@ public class Product {
 
     private void checkName(String name) {
         if (name.isEmpty()) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException(INVALID_FORMAT);
         }
     }
 
     private void checkQuantity(String quantity) {
-
         if (!quantity.matches("\\d+")) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException(INVALID_FORMAT);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 }
