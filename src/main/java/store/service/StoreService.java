@@ -5,10 +5,14 @@ import static store.model.Store.*;
 import static store.utils.ErrorMessage.INVALID_NAME;
 import static store.utils.ErrorMessage.INVALID_QUANTITY;
 
+import camp.nextstep.edu.missionutils.DateTimes;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.IllformedLocaleException;
 import java.util.List;
 import store.model.Order;
@@ -81,6 +85,44 @@ public class StoreService {
     }
 
     public void calculatorPrice(List<Store> store, Order order, List<Promotion> promotions) {
+        for (Product product : order.getOrder()) {
+            for (Store storeProduct : store) {
+                checkPromotionProduct(storeProduct, product, promotions);
+            }
+
+        }
 
     }
+
+    private void checkPromotionProduct(Store storeProduct, Product product, List<Promotion> promotions) {
+        if (storeProduct.getName().equals(product.getName())) {
+            if (isPromotion(storeProduct.getPromotion(), promotions)) {
+
+            }
+        }
+    }
+
+
+    private static boolean isPromotion(String promotion, List<Promotion> promotions) {
+        for (Promotion promotionType : promotions) {
+            if (promotionType.getName().equals(promotion)) {
+                return isPromotionDate(promotionType.getStartDate(), promotionType.getEndDate());
+            }
+        }
+        return false;
+    }
+
+    private static boolean isPromotionDate(String startDateStr, String endDateStr) {
+        final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date startDate = DATE_FORMAT.parse(startDateStr);
+            Date endDate = DATE_FORMAT.parse(endDateStr);
+            Date now = DATE_FORMAT.parse(String.valueOf(DateTimes.now()));
+
+            return now.before(startDate) && now.after(endDate);
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
 }

@@ -7,15 +7,15 @@ public class Promotion {
     private String name;
     private int buy;
     private int get;
-    private String start_date;
-    private String end_date;
+    private String startDate;
+    private String endDate;
 
     public Promotion(String name, int buy, int get, String start_date, String end_date) {
         this.name = name;
         this.buy = buy;
         this.get = get;
-        this.start_date = start_date;
-        this.end_date = end_date;
+        this.startDate = start_date;
+        this.endDate = end_date;
     }
 
     public static Promotion parsePromotions(String line) {
@@ -42,11 +42,11 @@ public class Promotion {
         return get;
     }
 
-    public String getStart_date() {
-        return start_date;
+    public String getStartDate() {
+        return startDate;
     }
 
-    public String getEnd_date() {
-        return end_date;
+    public String getEndDate() {
+        return endDate;
     }
 }
