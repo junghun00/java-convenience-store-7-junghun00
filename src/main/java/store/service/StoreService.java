@@ -207,7 +207,8 @@ public class StoreService {
             receipt.setPromotionQuantity(promotionProductQuantity);
             return ;
         }
-        receipt.setPromotionQuantity(receipt.getQuantity());
+        receipt.setPromotionQuantity(
+                receipt.getQuantity() / (receipt.getPromotionBuy() + 1) * (receipt.getPromotionBuy() + 1));
     }
 
     private boolean isPaymentConfirmed(Receipt receipt, int nomDiscountableQuantity) {
@@ -227,11 +228,11 @@ public class StoreService {
         if (isMembership()) {
             for (Receipt receipt : receipts) {
                 totalPrice += receipt.getIndividualPrice() * receipt.getQuantity();
-                promotionPrice += checkDiscount(receipt);
+                promotionPrice += checkPromotionPrice(receipt);
             }
         }
 
-        return checkMaxDisCount(totalPrice, promotionPrice);
+        return checkDisCount(totalPrice, promotionPrice);
     }
 
     private boolean isMembership() {
@@ -244,15 +245,11 @@ public class StoreService {
         }
     }
 
-    private int checkDiscount(Receipt receipt) {
-        int promotionPrice = 0;
-        if (receipt.getPromotionBuy() != NON_PROMOTION) {
-            promotionPrice = receipt.getIndividualPrice() * receipt.getPromotionQuantity();
-        }
-        return promotionPrice;
+    private int checkPromotionPrice(Receipt receipt) {
+        return receipt.getIndividualPrice() * receipt.getPromotionQuantity();
     }
 
-    private int checkMaxDisCount(int totalPrice, int promotionPrice) {
+    private int checkDisCount(int totalPrice, int promotionPrice) {
         int disCount = (int) ((totalPrice - promotionPrice) * 0.3);
         if (disCount > MAX_MEMBERSHIP) {
             return MAX_MEMBERSHIP;
