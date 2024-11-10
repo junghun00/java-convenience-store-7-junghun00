@@ -158,24 +158,13 @@ public class StoreService {
         if (receipt.getQuantity() + GET <= storeQuantity) {
             while (true) {
                 try {
-                    return answer(InputView.getFree(receipt.getName()));
+                    return isAnswer(InputView.getFree(receipt.getName()));
                 } catch (IllegalArgumentException e) {
                     OutputView.printErrorAnswer();
                 }
             }
         }
         return false;
-    }
-
-    private boolean answer(String answer) {
-        if (answer.equals("Y")) {
-            return true;
-        }
-        if (answer.equals("N")) {
-            return false;
-        }
-
-        throw new IllformedLocaleException();
     }
 
     public void checkTribePromotion(List<Receipt> receipts, List<Store> store) {
@@ -215,7 +204,7 @@ public class StoreService {
     private boolean isPaymentConfirmed(Receipt receipt, int nomDiscountableQuantity) {
         while (true) {
             try {
-                return answer(InputView.askForPayment(receipt.getName(), nomDiscountableQuantity));
+                return isAnswer(InputView.askForPayment(receipt.getName(), nomDiscountableQuantity));
             } catch (IllegalArgumentException e) {
                 OutputView.printErrorAnswer();
             }
@@ -239,7 +228,7 @@ public class StoreService {
     private boolean isMembership() {
         while (true) {
             try {
-                return answer(InputView.membershipMessage());
+                return isAnswer(InputView.membershipMessage());
             } catch (IllegalArgumentException e) {
                 OutputView.printErrorAnswer();
             }
@@ -257,5 +246,16 @@ public class StoreService {
         }
 
         return disCount;
+    }
+
+    public boolean isAnswer(String answer) {
+        if (answer.equals("Y")) {
+            return true;
+        }
+        if (answer.equals("N")) {
+            return false;
+        }
+
+        throw new IllformedLocaleException();
     }
 }

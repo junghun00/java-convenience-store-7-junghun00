@@ -8,9 +8,15 @@ public class InputView {
     private static final String MEMBERSHIP_MESSAGE = "멤버십 할인을 받으시겠습니까? (Y/N)";
 
     private final String GUIDE_MESSAGE = "\n구매하실 상품명과 수량을 입력해 주세요. (예: [사이다-2],[감자칩-1])";
+    private final String END_MESSAGE = "\n감사합니다. 구매하고 싶은 다른 상품이 있나요? (Y/N)";
 
     public String inputPurchaseProduct() {
         System.out.println(GUIDE_MESSAGE);
+        return Console.readLine();
+    }
+
+    public String inputEndMessage() {
+        System.out.println(END_MESSAGE);
         return Console.readLine();
     }
 

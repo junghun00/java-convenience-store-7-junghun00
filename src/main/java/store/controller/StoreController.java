@@ -25,8 +25,21 @@ public class StoreController {
         List<Store> store = printProductList();
         List<Promotion> promotions = loadPromotions();
 
-        Order order = purchaseProduct(store);
-        calculator(store, order, promotions);
+        do {
+            Order order = purchaseProduct(store);
+            calculator(store, order, promotions);
+
+        } while (!checkEnd());
+    }
+
+    private boolean checkEnd() {
+        String answer = inputView.inputEndMessage();
+
+        if (!storeService.isAnswer(answer)) {
+            return true;
+        }
+
+        return false;
     }
 
     private void calculator(List<Store> store, Order order, List<Promotion> promotions) {
@@ -36,7 +49,6 @@ public class StoreController {
         int discount = storeService.membershipDiscount(receipts);
 
         outputView.printReceipt(receipts, discount);
-
     }
 
     private List<Store> printProductList() {
