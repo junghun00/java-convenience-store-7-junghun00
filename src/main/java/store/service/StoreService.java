@@ -226,7 +226,7 @@ public class StoreService {
 
         if (isMembership()) {
             for (Receipt receipt : receipts) {
-                totalPrice += receipt.getIndividualPrice() * receipt.getPromotionQuantity();
+                totalPrice += receipt.getIndividualPrice() * receipt.getQuantity();
                 promotionPrice += checkDiscount(receipt);
             }
         }
@@ -253,7 +253,7 @@ public class StoreService {
     }
 
     private int checkMaxDisCount(int totalPrice, int promotionPrice) {
-        int disCount = totalPrice - promotionPrice;
+        int disCount = (int) ((totalPrice - promotionPrice) * 0.3);
         if (disCount > MAX_MEMBERSHIP) {
             return MAX_MEMBERSHIP;
         }
