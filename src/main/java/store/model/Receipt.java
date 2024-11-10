@@ -12,6 +12,7 @@ public class Receipt {
         this.individualPrice = individualPrice;
         this.quantity = quantity;
         this.promotionBuy = promotionBuy;
+        System.out.println(this);
     }
 
     public void quantityPlus() {
@@ -40,6 +41,17 @@ public class Receipt {
 
     public void setPromotionQuantity(int promotionQuantity) {
         this.promotionQuantity = promotionQuantity;
+    }
+
+    @Override
+    public String toString() {
+        return "Receipt{" +
+                "name='" + name + '\'' +
+                ", individualPrice=" + individualPrice +
+                ", quantity=" + quantity +
+                ", promotionQuantity=" + promotionQuantity +
+                ", promotionBuy=" + promotionBuy +
+                '}';
     }
 }
 

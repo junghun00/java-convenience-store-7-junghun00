@@ -49,10 +49,11 @@ public class OutputView {
 
     private int printOrder(List<Receipt> receipts) {
         int totalOrder = 0;
+
         for (Receipt receipt : receipts) {
             int price = receipt.getIndividualPrice() * receipt.getQuantity();
-            System.out.printf(ORDER_LIST, receipt.getName(), receipt.getQuantity(), price);
             totalOrder += price;
+            System.out.printf(ORDER_LIST, receipt.getName(), receipt.getQuantity(), price);
         }
 
         return totalOrder;
@@ -60,10 +61,13 @@ public class OutputView {
 
     private int printPromotion(List<Receipt> receipts) {
         int totalPromotion = 0;
+
         for (Receipt receipt : receipts) {
+            System.out.println("receipt = " + receipt.getPromotionQuantity());
             if (receipt.getPromotionQuantity() != 0) {
-                totalPromotion += receipt.getIndividualPrice() * receipt.getPromotionQuantity();
-                System.out.printf(PROMOTION_LIST, receipt.getName(), totalPromotion);
+                int price = receipt.getIndividualPrice() * receipt.getPromotionQuantity();
+                totalPromotion += price;
+                System.out.printf(PROMOTION_LIST, receipt.getName(), receipt.getIndividualPrice());
             }
         }
 

@@ -95,7 +95,6 @@ public class StoreService {
             int indivialPrice = getPrice(store, product.getName());
             int quantity = product.getQuantity();
             int promotinBuy = checkPromotionProduct(store, product, promotions);
-
             receipts.add(new Receipt(name, indivialPrice, quantity, promotinBuy));
         }
         return receipts;
@@ -113,15 +112,13 @@ public class StoreService {
     }
 
     private int checkPromotionProduct(List<Store> store, Product product, List<Promotion> promotions) {
-        int promotionBuy = 0;
-
         for (Store storeProduct : store) {
             if (storeProduct.getName().equals(product.getName())) {
-                promotionBuy = getPromotion(storeProduct.getPromotion(), promotions);
+                return getPromotion(storeProduct.getPromotion(), promotions);
             }
         }
 
-        return promotionBuy;
+        return 0;
     }
 
     private int getPromotion(String promotion, List<Promotion> promotions) {
@@ -200,14 +197,15 @@ public class StoreService {
     private void checkOverGet(Receipt receipt, Store storeProduct) {
         int promotionProductQuantity = storeProduct.getQuantity()
                 - (storeProduct.getQuantity() % receipt.getPromotionBuy() + GET);
+        System.out.println("promotionProductQuantity = " + promotionProductQuantity);
         int nomDiscountableQuantity = receipt.getQuantity() - promotionProductQuantity;
 
         if (nomDiscountableQuantity > 0) {
             if (!isPaymentConfirmed(receipt, nomDiscountableQuantity)) {
                 throw new IllformedLocaleException("다시입력받기 미구현");
             }
-            receipt.setPromotionQuantity(promotionProductQuantity);
         }
+        receipt.setPromotionQuantity(promotionProductQuantity);
     }
 
     private boolean isPaymentConfirmed(Receipt receipt, int nomDiscountableQuantity) {

@@ -42,8 +42,8 @@ public class Promotion {
             Date endDate = DATE_FORMAT.parse(endDateStr);
             Date now = DATE_FORMAT.parse(String.valueOf(DateTimes.now()));
 
-            if (now.before(endDate) && now.after(startDate)) {
-                return buy;
+            if (!now.before(startDate) && !now.after(endDate)) {
+                return this.buy;
             }
         } catch (ParseException e) {
             return 0;
