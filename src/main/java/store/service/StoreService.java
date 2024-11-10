@@ -190,6 +190,7 @@ public class StoreService {
         for (Store storeProduct : store) {
             if (receipt.getName().equals(storeProduct.getName())) {
                 checkOverGet(receipt, storeProduct);
+                break;
             }
         }
     }
