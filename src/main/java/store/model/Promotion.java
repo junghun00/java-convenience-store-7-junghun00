@@ -1,21 +1,25 @@
 package store.model;
 
+import camp.nextstep.edu.missionutils.DateTimes;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class Promotion {
     private String name;
     private int buy;
     private int get;
-    private String startDate;
-    private String endDate;
+    private String startDateStr;
+    private String endDateStr;
 
-    public Promotion(String name, int buy, int get, String start_date, String end_date) {
+    public Promotion(String name, int buy, int get, String startdateStr, String enddateStr) {
         this.name = name;
         this.buy = buy;
         this.get = get;
-        this.startDate = start_date;
-        this.endDate = end_date;
+        this.startDateStr = startdateStr;
+        this.endDateStr = enddateStr;
     }
 
     public static Promotion parsePromotions(String line) {
@@ -30,6 +34,23 @@ public class Promotion {
         return new Promotion(name, buy, get, start_date, end_date);
     }
 
+    public int checkPromotionDate() {
+        final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            Date startDate = DATE_FORMAT.parse(startDateStr);
+            Date endDate = DATE_FORMAT.parse(endDateStr);
+            Date now = DATE_FORMAT.parse(String.valueOf(DateTimes.now()));
+
+            if (now.before(startDate) && now.after(endDate)) {
+                return buy;
+            }
+        } catch (ParseException e) {
+            return 0;
+        }
+        return 0;
+    }
+
     public String getName() {
         return name;
     }
@@ -42,11 +63,11 @@ public class Promotion {
         return get;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public String getStartDateStr() {
+        return startDateStr;
     }
 
-    public String getEndDate() {
-        return endDate;
+    public String getEndDateStr() {
+        return endDateStr;
     }
 }

@@ -5,26 +5,27 @@ import static store.model.Store.*;
 import static store.utils.ErrorMessage.INVALID_NAME;
 import static store.utils.ErrorMessage.INVALID_QUANTITY;
 
-import camp.nextstep.edu.missionutils.DateTimes;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.IllformedLocaleException;
 import java.util.List;
 import store.model.Order;
 import store.model.Product;
 import store.model.Promotion;
+import store.model.Receipt;
 import store.model.Store;
+import store.view.InputView;
+import store.view.OutputView;
 
 public class StoreService {
+    private static final int GET = 1;
 
     public void loadProductsForm(List<Store> store) {
-        try (InputStream in = Store.class.getResourceAsStream("/products.md");
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+        try (InputStream in = Store.class.getResourceAsStream("/products.md"); BufferedReader br = new BufferedReader(
+                new InputStreamReader(in))) {
             String line = br.readLine();
 
             while ((line = br.readLine()) != null) {
@@ -36,8 +37,8 @@ public class StoreService {
     }
 
     public void loadPromotionsForm(List<Promotion> promotions) {
-        try (InputStream in = Store.class.getResourceAsStream("/promotions.md");
-             BufferedReader br = new BufferedReader(new InputStreamReader(in))) {
+        try (InputStream in = Store.class.getResourceAsStream("/promotions.md"); BufferedReader br = new BufferedReader(
+                new InputStreamReader(in))) {
             String line = br.readLine();
 
             while ((line = br.readLine()) != null) {
@@ -84,45 +85,99 @@ public class StoreService {
         }
     }
 
-    public void calculatorPrice(List<Store> store, Order order, List<Promotion> promotions) {
+    public List<Receipt> calculatorPrice(List<Store> store, Order order, List<Promotion> promotions) {
+        List<Receipt> receipts = new ArrayList<>();
+
         for (Product product : order.getOrder()) {
-            for (Store storeProduct : store) {
-                checkPromotionProduct(storeProduct, product, promotions);
-            }
+            String name = product.getName();
+            int indivialPrice = getPrice(store, product.getName());
+            int quantity = product.getQuantity();
+            int promotinBuy = checkPromotionProduct(store, product, promotions);
 
+            receipts.add(new Receipt(name, indivialPrice, quantity, promotinBuy));
         }
-
+        return receipts;
     }
 
-    private void checkPromotionProduct(Store storeProduct, Product product, List<Promotion> promotions) {
-        if (storeProduct.getName().equals(product.getName())) {
-            if (isPromotion(storeProduct.getPromotion(), promotions)) {
-
+    private int getPrice(List<Store> store, String productName) {
+        int price = 0;
+        for (Store storeProduct : store) {
+            if (storeProduct.getName().equals(productName)) {
+                price = storeProduct.getPrice();
             }
         }
+
+        return price;
     }
 
+    private int checkPromotionProduct(List<Store> store, Product product, List<Promotion> promotions) {
+        int promotionBuy = 0;
 
-    private static boolean isPromotion(String promotion, List<Promotion> promotions) {
+        for (Store storeProduct : store) {
+            if (storeProduct.getName().equals(product.getName())) {
+                promotionBuy = getPromotion(storeProduct.getPromotion(), promotions);
+            }
+        }
+
+        return promotionBuy;
+    }
+
+    private int getPromotion(String promotion, List<Promotion> promotions) {
         for (Promotion promotionType : promotions) {
             if (promotionType.getName().equals(promotion)) {
-                return isPromotionDate(promotionType.getStartDate(), promotionType.getEndDate());
+                return promotionType.checkPromotionDate();
+            }
+        }
+        return 0;
+    }
+
+    public void checkNonPromotionQuantity(List<Receipt> receipts, List<Store> store) {
+        final int NON_PROMOTION = 0;
+
+        for (Receipt receipt : receipts) {
+            if (receipt.getPromotionBuy() != NON_PROMOTION) {
+                checkPromotionQuantity(receipt, store);
+            }
+        }
+    }
+
+    private void checkPromotionQuantity(Receipt receipt, List<Store> store) {
+        for (Store storeProduct : store) {
+            if (receipt.getName().equals(storeProduct.getName())) {
+                checkNonGet(receipt, storeProduct.getQuantity());
+            }
+        }
+    }
+
+    private void checkNonGet(Receipt receipt, int storeQuantity) {
+        if (receipt.getQuantity() % (receipt.getPromotionBuy() + GET) == receipt.getPromotionBuy()) {
+            if (isGet(receipt, storeQuantity)) {
+                receipt.quantityPlus();
+            }
+        }
+    }
+
+    private boolean isGet(Receipt receipt, int storeQuantity) {
+        if (receipt.getQuantity() + GET <= storeQuantity) {
+            while (true) {
+                try {
+                    return answer(InputView.getFree(receipt.getName()));
+                } catch (IllegalArgumentException e) {
+                    OutputView.printErrorAnswer();
+                }
             }
         }
         return false;
     }
 
-    private static boolean isPromotionDate(String startDateStr, String endDateStr) {
-        final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date startDate = DATE_FORMAT.parse(startDateStr);
-            Date endDate = DATE_FORMAT.parse(endDateStr);
-            Date now = DATE_FORMAT.parse(String.valueOf(DateTimes.now()));
-
-            return now.before(startDate) && now.after(endDate);
-        } catch (ParseException e) {
+    private boolean answer(String answer) {
+        if (answer.equals("Y")) {
+            return true;
+        }
+        if (answer.equals("N")) {
             return false;
         }
-    }
 
+        throw new IllformedLocaleException();
+    }
 }

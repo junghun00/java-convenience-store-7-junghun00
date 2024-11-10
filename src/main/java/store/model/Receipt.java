@@ -13,6 +13,10 @@ public class Receipt {
         this.promotionBuy = promotionBuy;
     }
 
+    public void quantityPlus() {
+        quantity++;
+    }
+
     public String getName() {
         return name;
     }

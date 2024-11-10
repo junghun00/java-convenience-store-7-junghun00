@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import store.model.Order;
 import store.model.Promotion;
+import store.model.Receipt;
 import store.model.Store;
 import store.service.StoreService;
 import store.view.InputView;
@@ -23,9 +24,15 @@ public class StoreController {
     public void run() {
         List<Store> store = printProductList();
         List<Promotion> promotions = loadPromotions();
-        Order order = purchaseProduct(store);
 
-        storeService.calculatorPrice(store, order, promotions);
+        Order order = purchaseProduct(store);
+        calculator(store, order, promotions);
+    }
+
+    private void calculator(List<Store> store, Order order, List<Promotion> promotions) {
+        List<Receipt> receipts = storeService.calculatorPrice(store, order, promotions);
+        storeService.checkNonPromotionQuantity(receipts, store);
+
     }
 
     private List<Store> printProductList() {
