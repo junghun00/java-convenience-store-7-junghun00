@@ -21,6 +21,7 @@ import store.view.InputView;
 import store.view.OutputView;
 
 public class StoreService {
+    private static final int NON_PROMOTION = 0;
     private static final int GET = 1;
 
     public void loadProductsForm(List<Store> store) {
@@ -131,9 +132,7 @@ public class StoreService {
         return 0;
     }
 
-    public void checkNonPromotionQuantity(List<Receipt> receipts, List<Store> store) {
-        final int NON_PROMOTION = 0;
-
+    public void checkTribeQuantity(List<Receipt> receipts, List<Store> store) {
         for (Receipt receipt : receipts) {
             if (receipt.getPromotionBuy() != NON_PROMOTION) {
                 checkPromotionQuantity(receipt, store);
@@ -179,5 +178,44 @@ public class StoreService {
         }
 
         throw new IllformedLocaleException();
+    }
+
+    public void checkTribePromotion(List<Receipt> receipts, List<Store> store) {
+        for (Receipt receipt : receipts) {
+            if (receipt.getPromotionBuy() != NON_PROMOTION) {
+                checkStoreQuantity(receipt, store);
+            }
+        }
+    }
+
+    private void checkStoreQuantity(Receipt receipt, List<Store> store) {
+        for (Store storeProduct : store) {
+            if (receipt.getName().equals(storeProduct.getName())) {
+                checkOverGet(receipt, storeProduct);
+            }
+        }
+    }
+
+    private void checkOverGet(Receipt receipt, Store storeProduct) {
+        int promotionProductQuantity = storeProduct.getQuantity()
+                - (storeProduct.getQuantity() % receipt.getPromotionBuy() + GET);
+        int nomDiscountableQuantity = receipt.getQuantity() - promotionProductQuantity;
+
+        if (nomDiscountableQuantity > 0) {
+            if (!isPaymentConfirmed(receipt, nomDiscountableQuantity)) {
+                throw new IllformedLocaleException("다시입력받기 미구현");
+            }
+            receipt.setPromotionQuantity(promotionProductQuantity);
+        }
+    }
+
+    private boolean isPaymentConfirmed(Receipt receipt, int nomDiscountableQuantity) {
+        while (true) {
+            try {
+                return answer(InputView.askForPayment(receipt.getName(), nomDiscountableQuantity));
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorAnswer();
+            }
+        }
     }
 }

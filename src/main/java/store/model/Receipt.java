@@ -4,6 +4,7 @@ public class Receipt {
     private String name;
     private int individualPrice;
     private int quantity;
+    private int promotionQuantity;
     private int promotionBuy;
 
     public Receipt(String name, int individualPrice, int quantity, int promotionBuy) {
@@ -29,8 +30,16 @@ public class Receipt {
         return quantity;
     }
 
+    public int getPromotionQuantity() {
+        return promotionQuantity;
+    }
+
     public int getPromotionBuy() {
         return promotionBuy;
+    }
+
+    public void setPromotionQuantity(int promotionQuantity) {
+        this.promotionQuantity = promotionQuantity;
     }
 }
 

@@ -31,7 +31,8 @@ public class StoreController {
 
     private void calculator(List<Store> store, Order order, List<Promotion> promotions) {
         List<Receipt> receipts = storeService.calculatorPrice(store, order, promotions);
-        storeService.checkNonPromotionQuantity(receipts, store);
+        storeService.checkTribeQuantity(receipts, store);
+        storeService.checkTribePromotion(receipts, store);
 
     }
 
