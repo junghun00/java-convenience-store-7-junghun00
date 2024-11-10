@@ -34,6 +34,9 @@ public class StoreController {
         storeService.checkTribeQuantity(receipts, store);
         storeService.checkTribePromotion(receipts, store);
         int discount = storeService.membershipDiscount(receipts);
+
+        outputView.printReceipt(receipts, discount);
+
     }
 
     private List<Store> printProductList() {
