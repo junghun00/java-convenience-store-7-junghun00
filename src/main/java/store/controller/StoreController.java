@@ -33,7 +33,7 @@ public class StoreController {
         List<Receipt> receipts = storeService.calculatorPrice(store, order, promotions);
         storeService.checkTribeQuantity(receipts, store);
         storeService.checkTribePromotion(receipts, store);
-
+        int discount = storeService.membershipDiscount(receipts);
     }
 
     private List<Store> printProductList() {

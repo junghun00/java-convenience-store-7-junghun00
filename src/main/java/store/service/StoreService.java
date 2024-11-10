@@ -23,6 +23,7 @@ import store.view.OutputView;
 public class StoreService {
     private static final int NON_PROMOTION = 0;
     private static final int GET = 1;
+    private static final int MAX_MEMBERSHIP = 8000;
 
     public void loadProductsForm(List<Store> store) {
         try (InputStream in = Store.class.getResourceAsStream("/products.md"); BufferedReader br = new BufferedReader(
@@ -217,5 +218,46 @@ public class StoreService {
                 OutputView.printErrorAnswer();
             }
         }
+    }
+
+    public int membershipDiscount(List<Receipt> receipts) {
+        int totalPrice = 0;
+        int promotionPrice = 0;
+
+        if (isMembership()) {
+            for (Receipt receipt : receipts) {
+                totalPrice += receipt.getIndividualPrice() * receipt.getPromotionQuantity();
+                promotionPrice += checkDiscount(receipt);
+            }
+        }
+
+        return checkMaxDisCount(totalPrice, promotionPrice);
+    }
+
+    private boolean isMembership() {
+        while (true) {
+            try {
+                return answer(InputView.membershipMessage());
+            } catch (IllegalArgumentException e) {
+                OutputView.printErrorAnswer();
+            }
+        }
+    }
+
+    private int checkDiscount(Receipt receipt) {
+        int promotionPrice = 0;
+        if (receipt.getPromotionBuy() != NON_PROMOTION) {
+            promotionPrice = receipt.getIndividualPrice() * receipt.getPromotionQuantity();
+        }
+        return promotionPrice;
+    }
+
+    private int checkMaxDisCount(int totalPrice, int promotionPrice) {
+        int disCount = totalPrice - promotionPrice;
+        if (disCount > MAX_MEMBERSHIP) {
+            return MAX_MEMBERSHIP;
+        }
+
+        return disCount;
     }
 }
