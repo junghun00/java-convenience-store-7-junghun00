@@ -197,15 +197,17 @@ public class StoreService {
     private void checkOverGet(Receipt receipt, Store storeProduct) {
         int promotionProductQuantity = storeProduct.getQuantity()
                 - (storeProduct.getQuantity() % receipt.getPromotionBuy() + GET);
-        System.out.println("promotionProductQuantity = " + promotionProductQuantity);
+
         int nomDiscountableQuantity = receipt.getQuantity() - promotionProductQuantity;
 
         if (nomDiscountableQuantity > 0) {
             if (!isPaymentConfirmed(receipt, nomDiscountableQuantity)) {
                 throw new IllformedLocaleException("다시입력받기 미구현");
             }
+            receipt.setPromotionQuantity(promotionProductQuantity);
+            return ;
         }
-        receipt.setPromotionQuantity(promotionProductQuantity);
+        receipt.setPromotionQuantity(receipt.getQuantity());
     }
 
     private boolean isPaymentConfirmed(Receipt receipt, int nomDiscountableQuantity) {

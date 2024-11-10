@@ -63,11 +63,10 @@ public class OutputView {
         int totalPromotion = 0;
 
         for (Receipt receipt : receipts) {
-            System.out.println("receipt = " + receipt.getPromotionQuantity());
             if (receipt.getPromotionQuantity() != 0) {
-                int price = receipt.getIndividualPrice() * receipt.getPromotionQuantity();
+                int price = receipt.getIndividualPrice() * receipt.getPromotionQuantity() / (receipt.getPromotionBuy() + 1);
                 totalPromotion += price;
-                System.out.printf(PROMOTION_LIST, receipt.getName(), receipt.getIndividualPrice());
+                System.out.printf(PROMOTION_LIST, receipt.getName(), receipt.getPromotionQuantity() / (receipt.getPromotionBuy() + 1));
             }
         }
 
