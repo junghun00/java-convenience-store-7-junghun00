@@ -53,7 +53,7 @@ public class StoreController {
     }
 
     private void priceCalculator(List<Store> store, Order order, List<Promotion> promotions) {
-        List<Receipt> receipts = storeService.calculatorPrice(store, order, promotions);
+        List<Receipt> receipts = storeService.parseReceipt(store, order, promotions);
         storeService.checkTribeQuantity(receipts, store);
         storeService.checkTribePromotion(receipts, store);
         int discount = storeService.membershipDiscount(receipts);

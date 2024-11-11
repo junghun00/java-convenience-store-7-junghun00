@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.IllformedLocaleException;
 import java.util.List;
 import store.model.Order;
 import store.model.Product;
@@ -88,7 +87,7 @@ public class StoreService {
         }
     }
 
-    public List<Receipt> calculatorPrice(List<Store> store, Order order, List<Promotion> promotions) {
+    public List<Receipt> parseReceipt(List<Store> store, Order order, List<Promotion> promotions) {
         List<Receipt> receipts = new ArrayList<>();
 
         for (Product product : order.getOrder()) {
@@ -115,6 +114,9 @@ public class StoreService {
     private int checkPromotionProduct(List<Store> store, Product product, List<Promotion> promotions) {
         for (Store storeProduct : store) {
             if (storeProduct.getName().equals(product.getName())) {
+                if (storeProduct.getQuantity() == 0) {
+                    return 0;
+                }
                 return getPromotion(storeProduct.getPromotion(), promotions);
             }
         }
