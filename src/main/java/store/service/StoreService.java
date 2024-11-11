@@ -70,7 +70,7 @@ public class StoreService {
             }
         }
 
-        throw new IllformedLocaleException(INVALID_NAME);
+        throw new IllegalArgumentException(INVALID_NAME);
     }
 
     private void checkQuantity(List<Store> store, Product product) {
@@ -83,7 +83,7 @@ public class StoreService {
         }
 
         if (quantity < product.getQuantity()) {
-            throw new IllformedLocaleException(INVALID_QUANTITY);
+            throw new IllegalArgumentException(INVALID_QUANTITY);
         }
     }
 
