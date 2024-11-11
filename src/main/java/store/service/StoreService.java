@@ -149,7 +149,7 @@ public class StoreService {
     private void checkNonGet(Receipt receipt, int storeQuantity) {
         if (receipt.getQuantity() % (receipt.getPromotionBuy() + GET) == receipt.getPromotionBuy()) {
             if (isGet(receipt, storeQuantity)) {
-                receipt.quantityPlus();
+                receipt.addPromotion();
             }
         }
     }
@@ -192,7 +192,7 @@ public class StoreService {
 
         if (nomDiscountableQuantity > 0) {
             if (!isPaymentConfirmed(receipt, nomDiscountableQuantity)) {
-                throw new IllformedLocaleException("다시입력받기 미구현");
+                receipt.removeNonPromotion();
             }
             receipt.setPromotionQuantity(promotionProductQuantity);
             return ;

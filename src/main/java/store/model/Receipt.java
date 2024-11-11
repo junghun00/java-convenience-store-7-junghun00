@@ -14,8 +14,12 @@ public class Receipt {
         this.promotionBuy = promotionBuy;
     }
 
-    public void quantityPlus() {
+    public void addPromotion() {
         quantity++;
+    }
+
+    public void removeNonPromotion() {
+        quantity -= promotionBuy;
     }
 
     public String getName() {
