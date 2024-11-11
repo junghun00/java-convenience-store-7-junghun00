@@ -45,6 +45,17 @@ public class Store {
         }
     }
 
+    public int deduction(int orderQuantity) {
+        int value = 0;
+        quantity -= orderQuantity;
+
+        if (quantity < 0) {
+            value = Math.abs(quantity);
+            quantity = 0;
+        }
+        return value;
+    }
+
     public String getName() {
         return name;
     }

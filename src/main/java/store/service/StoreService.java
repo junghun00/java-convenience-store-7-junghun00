@@ -197,7 +197,7 @@ public class StoreService {
                 receipt.removeNonPromotion(nomDiscountableQuantity);
             }
             receipt.setPromotionQuantity(promotionProductQuantity);
-            return ;
+            return;
         }
         receipt.setPromotionQuantity(
                 receipt.getQuantity() / (receipt.getPromotionBuy() + 1) * (receipt.getPromotionBuy() + 1));
@@ -260,4 +260,33 @@ public class StoreService {
 
         throw new IllegalArgumentException(INVALID_INPUT);
     }
+
+    public void checkStock(List<Store> store, Order order) {
+        for (Product product : order.getOrder()) {
+            handleProductDeduction(store, product);
+        }
+    }
+
+    private void handleProductDeduction(List<Store> store, Product product) {
+        Store matchedStoreProduct = findStoreProduct(store, product.getName());
+
+        int remainingQuantity = matchedStoreProduct.deduction(product.getQuantity());
+        if (remainingQuantity > 0) {
+            applyRemainingDeduction(store, store.indexOf(matchedStoreProduct) + 1, remainingQuantity);
+        }
+    }
+
+    private Store findStoreProduct(List<Store> store, String productName) {
+        return store.stream()
+                .filter(storeProduct -> storeProduct.getName().equals(productName))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void applyRemainingDeduction(List<Store> store, int startIndex, int remainingQuantity) {
+        for (int i = startIndex; i < store.size() && remainingQuantity > 0; i++) {
+            remainingQuantity = store.get(i).deduction(remainingQuantity);
+        }
+    }
+
 }

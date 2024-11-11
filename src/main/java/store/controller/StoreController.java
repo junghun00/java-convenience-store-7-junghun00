@@ -24,21 +24,22 @@ public class StoreController {
     public void run() {
         List<Store> store = printProductList();
         List<Promotion> promotions = loadPromotions();
+        Order order;
 
         do {
-            Order order = purchaseProduct(store);
-            calculator(store, order, promotions);
+            order = purchaseProduct(store);
+            priceCalculator(store, order, promotions);
 
-        } while (!checkEnd());
+        } while (!checkEnd(store, order));
     }
 
-    private boolean checkEnd() {
+    private boolean checkEnd(List<Store> store, Order order) {
         while (true) {
             try {
-                String answer = inputView.inputEndMessage();
-                if (!storeService.isAnswer(answer)) {
+                if (!storeService.isAnswer(inputView.inputEndMessage())) {
                     return true;
                 }
+                updateStore(store, order);
                 return false;
             } catch (IllegalArgumentException e) {
                 outputView.printError(e.getMessage());
@@ -46,7 +47,12 @@ public class StoreController {
         }
     }
 
-    private void calculator(List<Store> store, Order order, List<Promotion> promotions) {
+    private void updateStore(List<Store> store, Order order) {
+        storeService.checkStock(store, order);
+        outputView.printProductList(store);
+    }
+
+    private void priceCalculator(List<Store> store, Order order, List<Promotion> promotions) {
         List<Receipt> receipts = storeService.calculatorPrice(store, order, promotions);
         storeService.checkTribeQuantity(receipts, store);
         storeService.checkTribePromotion(receipts, store);
