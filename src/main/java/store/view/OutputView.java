@@ -10,8 +10,8 @@ import store.model.Store;
 public class OutputView {
     private static final String ERROR_ANSWER = "[ERROR] 잘못된 입력입니다. 다시 입력해 주세요.";
 
-    private final String WECOME_MESSAGE = "\n안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n";
-    private final String RESULT_START_MESSAGE = "==============W 편의점================";
+    private final String WECOME_MESSAGE = "안녕하세요. W편의점입니다.\n현재 보유하고 있는 상품입니다.\n";
+    private final String RESULT_START_MESSAGE = "\n==============W 편의점================";
     private final String RESULT_MESSAGE = "%-16s\t%-5s\t%s\n";
     private final String ORDER_LIST = "%-16s\t%-7d\t%,d\n";
     private final String PROMOTION_MESSAGE = "=============증     정===============";
