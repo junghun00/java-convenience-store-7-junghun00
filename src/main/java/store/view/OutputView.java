@@ -79,8 +79,8 @@ public class OutputView {
             totalQuantity += receipt.getQuantity();
         }
         System.out.printf("%-16s\t%-7d\t%,-7d\n", "총구매액", totalQuantity, totalOrder);
-        System.out.printf("%-23s\t%,d\n", "행사할인", totalPromotion);
-        System.out.printf("%-23s\t%,d\n", "멤버십할인", discount);
+        System.out.printf("%-23s\t-%,d\n", "행사할인", totalPromotion);
+        System.out.printf("%-23s\t-%,d\n", "멤버십할인", discount);
         System.out.printf("%-23s\t%,d\n", "내실돈", (totalOrder - totalPromotion - discount));
     }
 }
