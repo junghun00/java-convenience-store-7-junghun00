@@ -2,6 +2,7 @@ package store.service;
 
 import static store.model.Promotion.parsePromotions;
 import static store.model.Store.*;
+import static store.utils.ErrorMessage.INVALID_INPUT;
 import static store.utils.ErrorMessage.INVALID_NAME;
 import static store.utils.ErrorMessage.INVALID_QUANTITY;
 
@@ -192,7 +193,7 @@ public class StoreService {
 
         if (nomDiscountableQuantity > 0) {
             if (!isPaymentConfirmed(receipt, nomDiscountableQuantity)) {
-                receipt.removeNonPromotion();
+                receipt.removeNonPromotion(nomDiscountableQuantity);
             }
             receipt.setPromotionQuantity(promotionProductQuantity);
             return ;
@@ -256,6 +257,6 @@ public class StoreService {
             return false;
         }
 
-        throw new IllformedLocaleException();
+        throw new IllegalArgumentException(INVALID_INPUT);
     }
 }

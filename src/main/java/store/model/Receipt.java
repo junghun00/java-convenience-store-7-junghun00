@@ -18,8 +18,8 @@ public class Receipt {
         quantity++;
     }
 
-    public void removeNonPromotion() {
-        quantity -= promotionBuy;
+    public void removeNonPromotion(int nomDiscountableQuantity) {
+        quantity -= nomDiscountableQuantity;
     }
 
     public String getName() {

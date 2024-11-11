@@ -33,13 +33,17 @@ public class StoreController {
     }
 
     private boolean checkEnd() {
-        String answer = inputView.inputEndMessage();
-
-        if (!storeService.isAnswer(answer)) {
-            return true;
+        while (true) {
+            try {
+                String answer = inputView.inputEndMessage();
+                if (!storeService.isAnswer(answer)) {
+                    return true;
+                }
+                return false;
+            } catch (IllegalArgumentException e) {
+                outputView.printError(e.getMessage());
+            }
         }
-
-        return false;
     }
 
     private void calculator(List<Store> store, Order order, List<Promotion> promotions) {
