@@ -143,6 +143,7 @@ public class StoreService {
         for (Store storeProduct : store) {
             if (receipt.getName().equals(storeProduct.getName())) {
                 checkNonGet(receipt, storeProduct.getQuantity());
+                break;
             }
         }
     }
