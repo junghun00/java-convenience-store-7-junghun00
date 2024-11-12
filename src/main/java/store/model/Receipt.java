@@ -1,7 +1,7 @@
 package store.model;
 
 public class Receipt {
-    private String name;
+    private final String name;
     private int individualPrice;
     private int quantity;
     private int promotionQuantity;
